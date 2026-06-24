@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authors</title>
+</head>
+<body>
+    <h1>Authors</h1>
+
+    <a href="{% url 'home' %}">Home</a>
+
+
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+
+    <ul>
+        {% for author in authors %}
+            <li>
+                {{ author.name }} {{ author.surname }} {{ author.patronymic }}
+
+                {% if request.user.is_authenticated and request.user.role == 1 %}
+                    <a href="{% url 'author_delete' author.id %}">Delete</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No authors</li>
+        {% endfor %}
+    </ul>
+    {% if request.user.is_authenticated and request.user.role == 1 %}
+    <h2>Add new Author</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    {% endif %}
+</body>
+</html>
